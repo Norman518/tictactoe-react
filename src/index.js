@@ -4,9 +4,6 @@ import "./index.css";
 
 function Square(props) {
   if (props.winningSquares.length > 0) {
-    console.log(props.winningSquares);
-    console.log(props.index);
-    console.log(props.winningSquares.includes(props.index));
     return (
       <button
         className={
@@ -66,7 +63,7 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    let coordinates = this.state.coordinates;
+    const coordinates = this.state.coordinates;
     if (calculateWinner(squares).win || squares[value]) {
       return;
     }
@@ -140,6 +137,7 @@ class Game extends React.Component {
       status = `Winner: ${winner}`;
     } else if (this.state.stepNumber === 9) {
       status = "This is a draw";
+      winningSquares = { squares: null };
     } else {
       status = `This player: ${this.state.xIsNext ? "X" : "O"}`;
       winningSquares = { squares: null };
