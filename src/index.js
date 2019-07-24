@@ -21,25 +21,15 @@ class Board extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+    return [0, 1, 2].map(index1 => (
+      <div key={index1} className="board-row">
+        {[0, 1, 2].map(index2 => (
+          <React.Fragment key={index2 + index1 * 3}>
+            {this.renderSquare(index2 + index1 * 3)}
+          </React.Fragment>
+        ))}
       </div>
-    );
+    ));
   }
 }
 
@@ -59,11 +49,10 @@ class Game extends React.Component {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     let coordinates = this.state.coordinates;
-    if (calculateWinner(squares) || squares[value]) {
+    if (calculateWinner(squares).win || squares[value]) {
       return;
     }
     squares[value] = this.state.xIsNext ? "X" : "O";
-
     switch (value) {
       case 0:
         coordinates[stepNumber] = "(0,0)";
@@ -114,7 +103,9 @@ class Game extends React.Component {
     const coordinates = this.state.coordinates;
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const squares = current.squares.slice();
+    const winningSquares = calculateWinner(squares).squares;
+    const winner = calculateWinner(squares).win;
     const moves = history.map((step, move) => {
       const desc = move
         ? `Go to move #${move}, ${coordinates[move - 1]}`
@@ -129,6 +120,15 @@ class Game extends React.Component {
     let status;
     if (winner) {
       status = `Winner: ${winner}`;
+      /*   return (
+        <div className="board-row">
+          {this.renderSquare(winningSquares[0])}
+          {this.renderSquare(winningSquares[1])}
+          {this.renderSquare(winningSquares[2])}
+        </div>
+      ); */
+    } else if (this.state.stepNumber === 9) {
+      status = "This is a draw";
     } else {
       status = `This player: ${this.state.xIsNext ? "X" : "O"}`;
     }
@@ -168,8 +168,8 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return { win: squares[a], squares: lines[i] };
     }
   }
-  return null;
+  return { win: null, squares: null };
 }
