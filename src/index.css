@@ -33,6 +33,10 @@ ul {
   width: 64px;
 }
 
+.win {
+  background-color: lightgreen;
+}
+
 .square:focus {
   outline: none;
 }
