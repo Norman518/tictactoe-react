@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
@@ -24,9 +24,9 @@ class Board extends React.Component {
     return [0, 1, 2].map(index1 => (
       <div key={index1} className="board-row">
         {[0, 1, 2].map(index2 => (
-          <React.Fragment key={index2 + index1 * 3}>
+          <Fragment key={index2 + index1 * 3}>
             {this.renderSquare(index2 + index1 * 3)}
-          </React.Fragment>
+          </Fragment>
         ))}
       </div>
     ));
