@@ -49,17 +49,50 @@ class Game extends React.Component {
     this.state = {
       history: [{ squares: Array(9).fill(null) }],
       xIsNext: true,
-      stepNumber: 0
+      stepNumber: 0,
+      coordinates: [Array(9).fill(null)]
     };
   }
   handleClick(value) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const stepNumber = this.state.stepNumber;
+    const history = this.state.history.slice(0, stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
+    let coordinates = this.state.coordinates;
     if (calculateWinner(squares) || squares[value]) {
       return;
     }
     squares[value] = this.state.xIsNext ? "X" : "O";
+
+    switch (value) {
+      case 0:
+        coordinates[stepNumber] = "(0,0)";
+        break;
+      case 1:
+        coordinates[stepNumber] = "(1,0)";
+        break;
+      case 2:
+        coordinates[stepNumber] = "(2,0)";
+        break;
+      case 3:
+        coordinates[stepNumber] = "(0,1)";
+        break;
+      case 4:
+        coordinates[stepNumber] = "(1,1)";
+        break;
+      case 5:
+        coordinates[stepNumber] = "(2,1)";
+        break;
+      case 6:
+        coordinates[stepNumber] = "(0,2)";
+        break;
+      case 7:
+        coordinates[stepNumber] = "(1,2)";
+        break;
+      default:
+        coordinates[stepNumber] = "(2,2)";
+        break;
+    }
     this.setState({
       history: history.concat([
         {
@@ -67,6 +100,7 @@ class Game extends React.Component {
         }
       ]),
       stepNumber: history.length,
+      coordinates: coordinates,
       xIsNext: !this.state.xIsNext
     });
   }
@@ -77,17 +111,21 @@ class Game extends React.Component {
     });
   }
   render() {
+    const coordinates = this.state.coordinates;
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const moves = history.map((step, move) => {
-      const desc = move ? `Go to move #${move}` : `Go to game start`;
+      const desc = move
+        ? `Go to move #${move}, ${coordinates[move - 1]}`
+        : `Go to game start`;
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
     });
+
     let status;
     if (winner) {
       status = `Winner: ${winner}`;
