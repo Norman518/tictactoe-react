@@ -2,12 +2,17 @@
   "name": "tictactoe-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://norman518.github.io/tictactoe-react/",
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
     "react-scripts": "3.0.1"
   },
   "scripts": {
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -29,3 +34,4 @@
     ]
   }
 }
+
